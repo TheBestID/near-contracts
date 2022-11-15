@@ -1,0 +1,11 @@
+/home/andrey/workspace/TheBestID/near-contracts/contract/target/debug/deps/digest-cf45ab41721971c1.rmeta: /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/lib.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/ct_variable.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/rt_variable.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/wrapper.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/xof_reader.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/digest.rs
+
+/home/andrey/workspace/TheBestID/near-contracts/contract/target/debug/deps/digest-cf45ab41721971c1.d: /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/lib.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/ct_variable.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/rt_variable.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/wrapper.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/xof_reader.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/digest.rs
+
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/lib.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/ct_variable.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/rt_variable.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/wrapper.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/core_api/xof_reader.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.10.5/src/digest.rs:
