@@ -1,0 +1,2 @@
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/home/andrey/workspace/TheBestID/near-contracts/sbt/target/wasm32-unknown-unknown/release/build/typenum-91c3ee488412bd08/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/home/andrey/workspace/TheBestID/near-contracts/sbt/target/wasm32-unknown-unknown/release/build/typenum-91c3ee488412bd08/out/op.rs

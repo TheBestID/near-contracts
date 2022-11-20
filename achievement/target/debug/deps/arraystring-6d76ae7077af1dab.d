@@ -1,0 +1,11 @@
+/home/andrey/workspace/TheBestID/near-contracts/achievement/target/debug/deps/arraystring-6d76ae7077af1dab.rmeta: /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/lib.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/arraystring.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/drain.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/error.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/generic.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/implementations.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/utils.rs
+
+/home/andrey/workspace/TheBestID/near-contracts/achievement/target/debug/deps/arraystring-6d76ae7077af1dab.d: /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/lib.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/arraystring.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/drain.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/error.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/generic.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/implementations.rs /home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/utils.rs
+
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/lib.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/arraystring.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/drain.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/error.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/generic.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/implementations.rs:
+/home/andrey/.cargo/registry/src/github.com-1ecc6299db9ec823/arraystring-0.3.0/src/utils.rs:
