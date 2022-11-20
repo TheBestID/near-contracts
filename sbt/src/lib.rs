@@ -14,7 +14,7 @@ type HashedData = [MyHash; 2];
 
 #[ext_contract(ext_self)]
 trait ExtSelf {    
-    pub fn get_user_id(&self, account: &AccountId) -> u128;
+    fn get_user_id(&self, account: &AccountId) -> u128;
 }
 
 
