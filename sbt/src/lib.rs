@@ -91,6 +91,10 @@ impl SBT {
     //     return self.souls_[&account_soul_id];
     // }
 
+    pub fn ping(&self) -> bool {
+        true
+    }
+
     pub fn get_hashed_data(&self) -> HashedData {
         let msg_sender = env::signer_account_id();
         let msg_sender_soul_id = self.soul_id_of_account_[&msg_sender];
@@ -103,5 +107,18 @@ impl SBT {
         users_data[0] = self.souls_[&msg_sender_soul_id].git_hash;
         users_data[1] = self.souls_[&msg_sender_soul_id].email_hash;
         users_data
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const HELLO_NEAR: &str = "beneficiary";
+
+    #[test]
+    fn initializes() {
+        
     }
 }
