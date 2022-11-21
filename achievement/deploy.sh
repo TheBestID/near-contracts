@@ -4,4 +4,4 @@
 
 echo ">> Deploying contract"
 
-near deploy contract.andzhi.testnet ./target/wasm32-unknown-unknown/release/contract.wasm
+near deploy achievements.soul_dev.testnet ./target/wasm32-unknown-unknown/release/contract.wasm
