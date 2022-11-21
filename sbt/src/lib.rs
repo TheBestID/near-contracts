@@ -78,6 +78,15 @@ impl SBT {
         self.soul_id_of_account_[account]
     }
 
+    pub fn get_account_id(&self, user_id: u128) -> AccountId {
+        require!(
+            self.souls_.contains_key(&user_id),
+            "No user found"
+        );
+        self.account_of_soul_id[&user_id].clone()
+    }
+
+
     pub fn burn(&mut self) {
         let msg_sender = env::signer_account_id();
         require!(
@@ -124,25 +133,5 @@ impl SBT {
         users_data[0] = self.souls_[&msg_sender_soul_id].git_hash;
         users_data[1] = self.souls_[&msg_sender_soul_id].email_hash;
         users_data
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn initializes() {
-        let mut contract = SBT::init();
-        assert_eq!(contract.ping(), true);
-    }
-
-    #[test]
-    fn mints() {
-        let mut contract = SBT::init();
-        let my_account: AccountId = "andzhi.testnet".parse().unwrap();
-
-        contract.mint(1, &my_account);
-        assert!(true);
     }
 }
