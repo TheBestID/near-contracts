@@ -1,11 +1,10 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, require, AccountId, ext_contract};
+use near_sdk::{env, ext_contract, near_bindgen, require, AccountId};
 use std::collections::HashMap;
 // use std::convert::{TryFrom, TryInto};
 
 type MyHash = [u8; 32];
 type HashedData = [MyHash; 2];
-
 
 #[derive(Default, BorshDeserialize, BorshSerialize, Copy, Clone)]
 pub struct Soul {
@@ -25,21 +24,23 @@ pub struct SBT {
 
 #[near_bindgen]
 impl SBT {
-
     #[init]
     #[private] // Public - but only callable by env::current_account_id()
     pub fn init() -> Self {
-      Self {
-        souls_ : HashMap::new(),
-        soul_id_of_account_ : HashMap::new(),
-        account_of_soul_id : HashMap::new(),
-        minted_not_claimed : HashMap::new(),
-      }
+        Self {
+            souls_: HashMap::new(),
+            soul_id_of_account_: HashMap::new(),
+            account_of_soul_id: HashMap::new(),
+            minted_not_claimed: HashMap::new(),
+        }
     }
 
     pub fn mint(&mut self, new_id: u128, account: &AccountId) {
         require!(!self.souls_.contains_key(&new_id), "Soul exists");
-        require!(!self.minted_not_claimed.contains_key(&new_id), "Soul is already minted");
+        require!(
+            !self.minted_not_claimed.contains_key(&new_id),
+            "Soul is already minted"
+        );
         require!(
             env::signer_account_id() == env::current_account_id(),
             "Only this contract can mint SBT"
@@ -56,11 +57,12 @@ impl SBT {
         );
         let msg_sender_soul_id = self.soul_id_of_account_[&msg_sender];
         require!(
-            self.minted_not_claimed.contains_key(&msg_sender_soul_id) && self.minted_not_claimed[&msg_sender_soul_id],
+            self.minted_not_claimed.contains_key(&msg_sender_soul_id)
+                && self.minted_not_claimed[&msg_sender_soul_id],
             "Soul must be minted to be able to claim it"
         );
         self.souls_.get_mut(&msg_sender_soul_id).unwrap().email_hash = *new_email_hash;
-        self.souls_.get_mut(&msg_sender_soul_id).unwrap().git_hash = *new_git_hash; 
+        self.souls_.get_mut(&msg_sender_soul_id).unwrap().git_hash = *new_git_hash;
         *self
             .account_of_soul_id
             .get_mut(&msg_sender_soul_id)
@@ -69,7 +71,10 @@ impl SBT {
     }
 
     pub fn get_user_id(&self, account: &AccountId) -> u128 {
-        require!(self.soul_id_of_account_.contains_key(account), "No user found");
+        require!(
+            self.soul_id_of_account_.contains_key(account),
+            "No user found"
+        );
         self.soul_id_of_account_[account]
     }
 
@@ -122,11 +127,9 @@ impl SBT {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     #[test]
     fn initializes() {
