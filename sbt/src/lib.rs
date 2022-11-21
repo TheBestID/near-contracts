@@ -36,10 +36,10 @@ impl SBT {
         minted_not_claimed : HashMap::new(),
       }
     }
-    // Public read-only method: Returns the counter value.
+
     pub fn mint(&mut self, new_id: u128, account: &AccountId) {
-        require!(self.souls_[&new_id].soul_id == 0, "Soul exists");
-        require!(!self.minted_not_claimed[&new_id], "Soul is already minted");
+        require!(!self.souls_.contains_key(&new_id), "Soul exists");
+        require!(!self.minted_not_claimed.contains_key(&new_id), "Soul is already minted");
         require!(
             env::signer_account_id() == env::current_account_id(),
             "Only this contract can mint SBT"
@@ -86,22 +86,6 @@ impl SBT {
         self.account_of_soul_id[&account_soul_id] != *account
     }
 
-    // Soul doesn't have Serialization. TODO: Decide - implement Seralization or leave with next function?
-    // pub fn get_soul(&self, account: &AccountId) -> Soul {
-    //     let account_soul_id = self.soul_id_of_account_[&account];
-    //     let msg_sender = env::signer_account_id();
-    //     let operator = env::current_account_id();
-    //     require!(
-    //         operator == *account || msg_sender == *account,
-    //         "Only this contract or user can access this data"
-    //     );
-    //     require!(
-    //         self.account_of_soul_id[&account_soul_id] == *account,
-    //         "Soul must exist to get it"
-    //     );
-    //     return self.souls_[&account_soul_id];
-    // }
-
     pub fn ping(&self) -> bool {
         true
     }
@@ -131,6 +115,15 @@ mod tests {
     #[test]
     fn initializes() {
         let mut contract = SBT::init();
-        contract.ping();
+        assert_eq!(contract.ping(), true);
+    }
+
+    #[test]
+    fn mints() {
+        let mut contract = SBT::init();
+        let my_account: AccountId = "andzhi.testnet".parse().unwrap();
+
+        contract.mint(1, &my_account);
+        assert!(true);
     }
 }
