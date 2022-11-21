@@ -9,12 +9,9 @@ use std::vec::Vec;
 
 #[ext_contract(sbt_contract)]
 trait SBTContractInterface { 
-    fn get_user_id(_user: AccountId) -> u128;
-}
+    fn get_user_id(&self, _user: AccountId) -> u128;
+    fn get_account_id(&self,user_id: u128) -> AccountId;
 
-fn get_user_account(_user_uid: u128) -> AccountId {
-    // TODO: Here we should call sbt contract and get id of our user from there
-    AccountId::try_from("sbt.soul_dev.testnet".to_string()).unwrap()
 }
 
 #[derive(Default, BorshDeserialize, BorshSerialize, Clone)]
@@ -67,27 +64,28 @@ impl AchievementToken {
         true
     }
 
-    fn get_user_account(&self, user: AccountId, id : u128) -> Promise {
+    fn transfer_to_verifier(&self, user_id: u128, money : u128) -> Promise {
         let sbt_account: AccountId = "sbt.soul_dev.testnet".parse().unwrap();
         sbt_contract::ext(sbt_account)
-        .get_user_id(user)
+        .get_account_id(user_id)
         .then(
             Self::ext(env::current_account_id())
                 .with_static_gas(XCC_GAS)
-                .get_user_id_callback(id)
+                .transfer_to_verifier_callback(money)
         )
     }
     
 
     #[private]
-    pub fn get_user_account_callback(&self, id : u128, #[callback_result] call_result: Result<u128, PromiseError>) -> bool {
+    pub fn transfer_to_verifier_callback(&self, money : u128, #[callback_result] call_result: Result<AccountId, PromiseError>) -> bool {
         if call_result.is_err() {
             log!("There was an error contacting SBT contract");
             return false;
         }
 
-        let uid: u128 = call_result.unwrap();
-        require!(id == uid, "Wrong uid");
+        let account: AccountId = call_result.unwrap();
+        // require!(id == uid, "Wrong uid");
+        Promise::new(account).transfer(money);
         true
     }
 
@@ -199,10 +197,7 @@ impl AchievementToken {
             !self.achievements[&_achievement_id].is_verified,
             "Achievement already verified"
         );
-
-        let verifier_account = get_user_account(current_verifier);
-        Promise::new(verifier_account).transfer(self.achievements[&_achievement_id].balance);
-        self.achievements.get_mut(&_achievement_id).unwrap().is_verified = true;
+        self.transfer_to_verifier(current_verifier, self.achievements[&_achievement_id].balance);
     }
 
     // fn split_achievement(&mut self, _achievement_id: u128) {
