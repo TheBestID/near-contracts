@@ -1,7 +1,7 @@
+// SPDX-License-Identifier: MIT
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, ext_contract, near_bindgen, require, AccountId};
+use near_sdk::{env, near_bindgen, require, AccountId};
 use std::collections::HashMap;
-// use std::convert::{TryFrom, TryInto};
 
 type MyHash = [u8; 32];
 type HashedData = [MyHash; 2];
@@ -25,7 +25,7 @@ pub struct SBT {
 #[near_bindgen]
 impl SBT {
     #[init]
-    #[private] // Public - but only callable by env::current_account_id()
+    #[private] 
     pub fn init() -> Self {
         Self {
             souls_: HashMap::new(),

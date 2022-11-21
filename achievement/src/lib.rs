@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 
 use near_sdk::{env, log, near_bindgen, ext_contract, require, AccountId, Gas, Promise, PromiseError};
