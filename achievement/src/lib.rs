@@ -1,25 +1,20 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, ext_contract, require, AccountId, Promise};
+
+use near_sdk::{env, log, near_bindgen, ext_contract, require, AccountId, Gas, Promise, PromiseError};
 use std::collections::HashMap;
 use std::vec::Vec;
+
+
+
+
 #[ext_contract(sbt_contract)]
 trait SBTContractInterface { 
     fn get_user_id(_user: AccountId) -> u128;
 }
 
-// fn is_sbt_contract_account(acc: AccountId) -> bool {
-//     let achievements_contract_account = AccountId::try_from("sbt.souldev.testnet".to_string()).unwrap();
-//     achievements_contract_account == acc
-// }
-
-fn get_user_id(_user: AccountId) -> u128 {
-    // TODO: Here we should call sbt contract and get id of our user from there
-    42
-}
-
 fn get_user_account(_user_uid: u128) -> AccountId {
     // TODO: Here we should call sbt contract and get id of our user from there
-    AccountId::try_from("sbt.souldev.testnet".to_string()).unwrap()
+    AccountId::try_from("sbt.soul_dev.testnet".to_string()).unwrap()
 }
 
 #[derive(Default, BorshDeserialize, BorshSerialize, Clone)]
@@ -38,28 +33,78 @@ pub struct Achievement {
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
 pub struct AchievementToken {
-    // TODO: Find a way to store achievements contract account: problem: There is no default value for AccountId
     achievements: HashMap<u128, Achievement>,
     issuers_achievements: HashMap<u128, Vec<u128>>,
     users_achievements: HashMap<u128, Vec<u128>>,
 }
 
+pub const XCC_GAS: Gas = Gas(20_000_000_000_000);
+
+
 #[near_bindgen]
 impl AchievementToken {
+    fn get_user_id(&self, user: AccountId, id : u128) -> Promise {
+        let sbt_account: AccountId = "sbt.soul_dev.testnet".parse().unwrap();
+        sbt_contract::ext(sbt_account)
+        .get_user_id(user)
+        .then(
+            Self::ext(env::current_account_id())
+                .with_static_gas(XCC_GAS)
+                .get_user_id_callback(id)
+        )
+    }
+    
+
+    #[private]
+    pub fn get_user_id_callback(&self, id : u128, #[callback_result] call_result: Result<u128, PromiseError>) -> bool {
+        if call_result.is_err() {
+            log!("There was an error contacting SBT contract");
+            return false;
+        }
+
+        let uid: u128 = call_result.unwrap();
+        require!(id == uid, "Wrong uid");
+        true
+    }
+
+    fn get_user_account(&self, user: AccountId, id : u128) -> Promise {
+        let sbt_account: AccountId = "sbt.soul_dev.testnet".parse().unwrap();
+        sbt_contract::ext(sbt_account)
+        .get_user_id(user)
+        .then(
+            Self::ext(env::current_account_id())
+                .with_static_gas(XCC_GAS)
+                .get_user_id_callback(id)
+        )
+    }
+    
+
+    #[private]
+    pub fn get_user_account_callback(&self, id : u128, #[callback_result] call_result: Result<u128, PromiseError>) -> bool {
+        if call_result.is_err() {
+            log!("There was an error contacting SBT contract");
+            return false;
+        }
+
+        let uid: u128 = call_result.unwrap();
+        require!(id == uid, "Wrong uid");
+        true
+    }
+
     #[payable]
     fn mint(&mut self, _achievement_data: Achievement) {
         require!(
             self.achievements[&_achievement_data.achievement_id].issuer != 0,
             "Achievement id already exists"
         );
+        self.get_user_id(env::signer_account_id(), _achievement_data.issuer);
         require!(
-            env::signer_account_id() == env::current_account_id()
-                || get_user_id(env::signer_account_id()) == _achievement_data.issuer,
+            env::signer_account_id() == env::current_account_id(),
             "Only you can be an issuer"
         );
         require!(
             env::attached_deposit() >= _achievement_data.balance,
-            "Not enough balance attached"
+            "Not enough deposit attached"
         );
 
         let return_money = env::attached_deposit() - _achievement_data.balance;
@@ -82,10 +127,7 @@ impl AchievementToken {
             self.achievements[&_achievement_id].issuer != 0,
             "Achievement id already exists"
         );
-        require!(
-            get_user_id(env::signer_account_id()) == self.achievements[&_achievement_id].issuer,
-            "Only you can be an issuer"
-        );
+        self.get_user_id(env::signer_account_id(), self.achievements[&_achievement_id].issuer);
         let current_issuer_id = self.achievements[&_achievement_id].issuer;
         for i in 0..self.issuers_achievements[&current_issuer_id].len() {
             if _achievement_id == self.issuers_achievements[&current_issuer_id][i] {
@@ -110,35 +152,49 @@ impl AchievementToken {
         self.achievements.remove(&_achievement_id);      
     }
 
+    fn set_new_owner(&mut self, user: AccountId, id : u128) -> Promise {
+        let sbt_account: AccountId = "sbt.soul_dev.testnet".parse().unwrap();
+        sbt_contract::ext(sbt_account)
+        .get_user_id(user)
+        .then(
+            Self::ext(env::current_account_id())
+                .with_static_gas(XCC_GAS)
+                .get_user_id_callback(id)
+        )
+    }
+    
+
+    #[private]
+    pub fn set_new_owner_callback(&mut self, _achievement_id: u128, #[callback_result] call_result: Result<u128, PromiseError>) -> bool {
+        if call_result.is_err() {
+            log!("There was an error contacting SBT contract");
+            return false;
+        }
+
+        let user_id: u128 = call_result.unwrap();
+        self.achievements.get_mut(&_achievement_id).unwrap().owner = user_id;
+        // require!(id == uid, "Wrong uid");
+        true
+    } 
+
     fn update_owner(&mut self, _achievement_id: u128, _new_owner: AccountId) {
-        let new_account_id = get_user_id(_new_owner);
-        require!(
-            get_user_id(env::signer_account_id()) == self.achievements[&_achievement_id].issuer,
-            "Only issuer can change an owner"
-        );
+        // let new_account_id = get_user_id(_new_owner);
+        self.set_new_owner(_new_owner, _achievement_id);
+        self.get_user_id(env::signer_account_id(), self.achievements[&_achievement_id].issuer);
         require!(
             self.achievements[&_achievement_id].owner == 0,
             "Owner of this achievement can not be changed"
         );
-        self.achievements.get_mut(&_achievement_id).unwrap().owner = new_account_id;
     }
 
     fn accept_achievement(&mut self, _achievement_id: u128) {
-        let current_account_id = get_user_id(env::signer_account_id());
-        require!(
-            current_account_id == self.achievements[&_achievement_id].owner,
-            "Only owner can accept this achievement"
-        );
+        self.get_user_id(env::signer_account_id(), self.achievements[&_achievement_id].owner);
         self.achievements.get_mut(&_achievement_id).unwrap().is_accepted = true;
     }
 
     fn verify_achievement(&mut self, _achievement_id: u128) {
-        let current_account_id = get_user_id(env::signer_account_id());
         let current_verifier = self.achievements[&_achievement_id].verifier;
-        require!(
-            current_account_id == current_verifier,
-            "Only verifier can verify an achievement"
-        );
+        self.get_user_id(env::signer_account_id(), current_verifier);
         require!(
             !self.achievements[&_achievement_id].is_verified,
             "Achievement already verified"

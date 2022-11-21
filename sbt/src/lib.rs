@@ -6,17 +6,6 @@ use std::collections::HashMap;
 type MyHash = [u8; 32];
 type HashedData = [MyHash; 2];
 
-// // FIXME: Should be not a function, but a const global variable or SBT struct member
-// fn is_achievements_contract_account(acc: AccountId) -> bool {
-//     let achievements_contract_account = AccountId::try_from("sbt.souldev.testnet".to_string()).unwrap();
-//     achievements_contract_account == acc
-// }
-
-#[ext_contract(ext_self)]
-trait ExtSelf {    
-    fn get_user_id(&self, account: &AccountId) -> u128;
-}
-
 
 #[derive(Default, BorshDeserialize, BorshSerialize, Copy, Clone)]
 pub struct Soul {
@@ -28,9 +17,6 @@ pub struct Soul {
 #[near_bindgen]
 #[derive(Default, BorshDeserialize, BorshSerialize)]
 pub struct SBT {
-    // achievements_contract_account: AccountId,
-
-    // TODO: Find a way to store achievements contract account: problem: There is no default value for AccountId
     souls_: HashMap<u128, Soul>,
     soul_id_of_account_: HashMap<AccountId, u128>,
     account_of_soul_id: HashMap<u128, AccountId>,
@@ -41,7 +27,7 @@ pub struct SBT {
 impl SBT {
     // Public read-only method: Returns the counter value.
     pub fn mint(&mut self, new_id: u128, account: &AccountId) {
-        require!(self.souls_[&new_id].soul_id != 0, "Soul exists");
+        require!(self.souls_[&new_id].soul_id == 0, "Soul exists");
         require!(!self.minted_not_claimed[&new_id], "Soul is already minted");
         require!(
             env::signer_account_id() == env::current_account_id(),
