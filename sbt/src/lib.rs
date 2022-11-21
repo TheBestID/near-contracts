@@ -25,6 +25,17 @@ pub struct SBT {
 
 #[near_bindgen]
 impl SBT {
+
+    #[init]
+    #[private] // Public - but only callable by env::current_account_id()
+    pub fn init() -> Self {
+      Self {
+        souls_ : HashMap::new(),
+        soul_id_of_account_ : HashMap::new(),
+        account_of_soul_id : HashMap::new(),
+        minted_not_claimed : HashMap::new(),
+      }
+    }
     // Public read-only method: Returns the counter value.
     pub fn mint(&mut self, new_id: u128, account: &AccountId) {
         require!(self.souls_[&new_id].soul_id == 0, "Soul exists");
@@ -119,6 +130,7 @@ mod tests {
 
     #[test]
     fn initializes() {
-        
+        let mut contract = SBT::init();
+        contract.ping();
     }
 }
