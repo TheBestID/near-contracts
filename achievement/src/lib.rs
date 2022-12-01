@@ -107,9 +107,10 @@ impl AchievementToken {
             "Not enough deposit attached"
         );
         require!(
-            env::attached_deposit() <= u128::MAX / NEAR,
+            env::attached_deposit() >= u128::MAX / NEAR,
             format!(
-                "You can't attach so much NEAR, maximum is {}.",
+                "You can't attach so much NEAR (attached {}), maximum is {}.",
+                env::attached_deposit(),
                 u128::MAX / NEAR
             )
         );
@@ -260,7 +261,7 @@ impl AchievementToken {
         );
         require!(
             !self.achievements[&_achievement_id].is_verified,
-            "Achievement already verified"
+            "Achievement is already verified"
         );
         self.achievements
             .get_mut(&_achievement_id)
@@ -270,6 +271,10 @@ impl AchievementToken {
         let current_owner = self.account_of_id[&self.achievements[&_achievement_id].owner].clone();
         log!("Send {} NEAR to achievement owner", achievement_balance);
         Promise::new(current_owner).transfer(achievement_balance * NEAR);
+        self.achievements
+            .get_mut(&_achievement_id)
+            .unwrap()
+            .balance = 0;
     }
 
     pub fn split_achievement(
@@ -360,7 +365,6 @@ impl AchievementToken {
         }
     }
 
-    // TODO: Think about visibility (and for other functions too)
     pub fn get_achievement_data(&self, _achievement_id: u128) -> IOAchievement {
         require!(
             self.achievements.contains_key(&_achievement_id),
