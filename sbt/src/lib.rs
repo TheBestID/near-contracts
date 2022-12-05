@@ -202,14 +202,6 @@ impl SBT {
         self.minted_not_claimed[&msg_sender_soul_id]
     }
 
-    pub fn ping(&self) -> bool {
-        true
-    }
-
-    pub fn ping_string(&self) -> String {
-        "I'm okey".to_string()
-    }
-
     pub fn get_hashed_data(&self) -> HashedData {
         let msg_sender = env::signer_account_id();
         require!(
