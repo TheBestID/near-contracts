@@ -1,4 +1,4 @@
-# SoulDev contracts on NEAR
+# SoulDev contracts on [NEAR](https://near.org/)
 
 ## Main info
 Main part consists of two contracts - `sbt` and `achievement`, stored in corresponding folders.
